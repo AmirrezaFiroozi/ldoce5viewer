@@ -1,6 +1,5 @@
 """application-specific URI scheme handler for QtWebKit"""
 
-import imp
 import os.path
 import sys
 import traceback
@@ -32,9 +31,7 @@ def _load_static_data(filename):
     if filename in _static_cache:
         return _static_cache[filename]
 
-    is_frozen = hasattr(sys, "frozen") or imp.is_frozen(  # new py2exe
-        "__main__"
-    )  # tools/freeze
+    is_frozen = hasattr(sys, "frozen")
 
     if is_frozen:
         if sys.platform.startswith("darwin"):
@@ -119,7 +116,8 @@ class MyUrlSchemeHandler(QWebEngineUrlSchemeHandler):
             searcher_de = self._searcher_de
             if searcher_hp and searcher_de:
                 try:
-                    data = enc_utf8(search_and_render(url, searcher_hp, searcher_de))
+                    data = enc_utf8(search_and_render(
+                        url, searcher_hp, searcher_de))
                     mime = "text/html"
                 except Exception:
                     s = u"<h2>Error</h2><div>{0}</div>".format(

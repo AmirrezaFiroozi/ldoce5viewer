@@ -47,7 +47,7 @@ else:
                 "py2exe": {
                     "includes": ["sip"],
                     "packages": ["lxml.etree", "gzip", "lxml._elementpath"],
-                    #'excludes': ['_ssl', 'ssl', 'bz2', 'sqlite3', 'select',
+                    # 'excludes': ['_ssl', 'ssl', 'bz2', 'sqlite3', 'select',
                     #             'xml', 'unittest', 'email', 'distutils', 'xmlrpclib',
                     #             'doctest', 'pdb', 'tarfile'],
                     "compressed": True,
@@ -72,7 +72,8 @@ else:
     qt_plugins_path = subprocess.check_output(
         "qmake -query QT_INSTALL_PLUGINS", shell=True
     )
-    qt_plugins_path = qt_plugins_path[0 : len(qt_plugins_path) - 1]  # remove "\n"
+    qt_plugins_path = qt_plugins_path[0: len(
+        qt_plugins_path) - 1]  # remove "\n"
     extra_options.update(
         dict(
             name="LDOCE5 Viewer",
@@ -101,7 +102,7 @@ else:
                         "PySide6.QtXml",
                         "PySide6.QtXmlPatterns",
                     ],
-                    #'qt_plugins': [
+                    # 'qt_plugins': [
                     #    'imageformats/libqjpeg.dylib',
                     # ]
                 }
@@ -145,7 +146,6 @@ setup(
         "ldoce5viewer.qtgui.ui",
         "ldoce5viewer.qtgui.resources",
         "ldoce5viewer.qtgui.utils",
-        "ldoce5viewer.qtgui.utils.mp3play",
         "ldoce5viewer.utils",
         "ldoce5viewer.ldoce5",
     ],

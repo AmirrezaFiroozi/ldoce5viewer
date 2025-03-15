@@ -3,11 +3,7 @@
 import os.path
 from struct import unpack
 from zlib import decompress
-
-try:
-    from configparser import SafeConfigParser
-except:
-    from ConfigParser import SafeConfigParser
+from configparser import ConfigParser
 
 try:
     import __builtin__
@@ -80,9 +76,9 @@ def is_ldoce5_dir(path):
 
 def list_files(data_root, archive_name):
     def _parse_cft(path):
-        cp = SafeConfigParser()
+        cp = ConfigParser()
         with open(path, "r") as f:
-            cp.readfp(f)
+            cp.read_file(f)
         r = {}
         r["offsets"] = {}
         offset = 0
@@ -218,7 +214,8 @@ class ArchiveReader(object):
         self._f = None
         content_path = os.path.join(
             data_dir,
-            os.path.join(_ARCHIVE_DIRS[archive_name], "files.skn", "CONTENT.tda"),
+            os.path.join(_ARCHIVE_DIRS[archive_name],
+                         "files.skn", "CONTENT.tda"),
         )
         self._f = open(content_path, "rb")
         self._cache = b""
@@ -233,7 +230,7 @@ class ArchiveReader(object):
             self._cache = decompress(f.read(cmpsize))
             self._cache_offset = cmpoffset
             self._cache_size = cmpsize
-        return self._cache[origoffset : (origoffset + origsize)]
+        return self._cache[origoffset: (origoffset + origsize)]
 
     def __del__(self):
         self.close()

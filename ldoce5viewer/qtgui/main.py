@@ -57,6 +57,7 @@ def _incr_delay_func(count):
     x = max(0.3, min(1, float(count) / _INCREMENTAL_LIMIT))
     return int(_MAX_DELAY_UPDATE_INDEX * x)
 
+
 class MainWindow(QMainWindow):
 
     # ------------
@@ -101,7 +102,8 @@ class MainWindow(QMainWindow):
         self._scheme_handler = MyUrlSchemeHandler(self)
         profile = QWebEngineProfile.defaultProfile()
         for name in _LOCAL_SCHEMES:
-            profile.installUrlSchemeHandler(name.encode("ascii"), self._scheme_handler)
+            profile.installUrlSchemeHandler(
+                name.encode("ascii"), self._scheme_handler)
 
         # Setup
         self._setup_ui()
@@ -115,10 +117,14 @@ class MainWindow(QMainWindow):
             return timer
 
         self._timerUpdateIndex = _makeSingleShotTimer(self._updateIndex)
-        self._timerAutoFTS = _makeSingleShotTimer(self._onTimerAutoFullSearchTimeout)
-        self._timerSpellCorrection = _makeSingleShotTimer(self._onTimerSpellCorrection)
-        self._timerSearchingLabel = _makeSingleShotTimer(self._onTimerSearchingLabel)
-        self._auto_pron_timer = _makeSingleShotTimer(self._on_timer_auto_pron_timeout)
+        self._timerAutoFTS = _makeSingleShotTimer(
+            self._onTimerAutoFullSearchTimeout)
+        self._timerSpellCorrection = _makeSingleShotTimer(
+            self._onTimerSpellCorrection)
+        self._timerSearchingLabel = _makeSingleShotTimer(
+            self._onTimerSearchingLabel)
+        self._auto_pron_timer = _makeSingleShotTimer(
+            self._on_timer_auto_pron_timeout)
 
         # Clipboard
         clipboard = QApplication.clipboard()
@@ -352,7 +358,8 @@ class MainWindow(QMainWindow):
 
         if sel_row >= 0:
             lw.setCurrentRow(sel_row)
-            lw.scrollToItem(lw.item(sel_row), QAbstractItemView.ScrollHint.EnsureVisible)
+            lw.scrollToItem(lw.item(sel_row),
+                            QAbstractItemView.ScrollHint.EnsureVisible)
         else:
             lw.scrollToTop()
 
@@ -491,7 +498,8 @@ class MainWindow(QMainWindow):
             words = self._fts_hwdphr.correct(query)
             cmpl = QCompleter(words, self)
             cmpl.setModelSorting(QCompleter.ModelSorting.UnsortedModel)
-            cmpl.setCompletionMode(QCompleter.CompletionMode.UnfilteredPopupCompletion)
+            cmpl.setCompletionMode(
+                QCompleter.CompletionMode.UnfilteredPopupCompletion)
             self._ui.lineEditSearch.setCompleter(cmpl)
             cmpl.complete()
 
@@ -587,10 +595,10 @@ class MainWindow(QMainWindow):
 
             items = [(idx, item) for (idx, item) in enumerate(items)]
             if back:
-                items = items[max(0, curidx - 20) : curidx]
+                items = items[max(0, curidx - 20): curidx]
                 items.reverse()
             else:
-                items = items[curidx + 1 : curidx + 1 + 20]
+                items = items[curidx + 1: curidx + 1 + 20]
             urlset = set()
             menu.clear()
             for idx, hitem in items:
@@ -687,7 +695,8 @@ class MainWindow(QMainWindow):
         self._instantSearch(pending=True, delay=False)
 
     def _onMonitorClipboardChanged(self):
-        get_config()["monitorClipboard"] = self._ui.actionMonitorClipboard.isChecked()
+        get_config()[
+            "monitorClipboard"] = self._ui.actionMonitorClipboard.isChecked()
 
     def _onPaste(self):
         clipboard = QApplication.clipboard()
@@ -733,7 +742,8 @@ class MainWindow(QMainWindow):
         ui.toolButtonNavForward.setEnabled(
             webPage.action(QWebEnginePage.WebAction.Forward).isEnabled()
         )
-        ui.toolButtonNavBack.setEnabled(webPage.action(QWebEnginePage.WebAction.Back).isEnabled())
+        ui.toolButtonNavBack.setEnabled(webPage.action(
+            QWebEnginePage.WebAction.Back).isEnabled())
 
     # -----------
     # Auto Pron
@@ -795,11 +805,13 @@ class MainWindow(QMainWindow):
         self._ui.actionFindNext.setEnabled(result.numberOfMatches() > 1)
         self._ui.actionFindPrev.setEnabled(result.numberOfMatches() > 1)
         if result.numberOfMatches() == 1:
-            self._ui.labelFindResults.setText(f"{result.numberOfMatches()} match")
+            self._ui.labelFindResults.setText(
+                f"{result.numberOfMatches()} match")
         elif result.numberOfMatches() == 0:
             self._ui.labelFindResults.setText("")
         else:
-            self._ui.labelFindResults.setText(f"{result.activeMatch()} of {result.numberOfMatches()} matches")
+            self._ui.labelFindResults.setText(
+                f"{result.activeMatch()} of {result.numberOfMatches()} matches")
 
     def findText(self, text):
         self._ui.webView.page().findText(text)
@@ -824,7 +836,7 @@ class MainWindow(QMainWindow):
         printer = self._printer
         printer.setDocName(ui.webView.title() or "")
         dialog = QPrintPreviewDialog(printer, self)
-        dialog.paintRequested.connect(ui.webView.print_)
+        dialog.paintRequested.connect(ui.webView.print)
         dialog.exec_()
 
     def print_(self):
@@ -833,7 +845,7 @@ class MainWindow(QMainWindow):
         printer.setDocName(ui.webView.title() or "")
         dialog = QPrintDialog(printer, self)
         if dialog.exec_() == QDialog.Accepted:
-            ui.webView.print_(printer)
+            ui.webView.print(printer)
 
     # ------------
     # Debugging
@@ -988,12 +1000,17 @@ class MainWindow(QMainWindow):
             _set_icon(ui.actionAbout, "help-about")
             _set_icon(ui.actionPrint, "document-print")
             _set_icon(ui.actionPrintPreview, "document-print-preview")
-            _set_icon(webpage.action(QWebEnginePage.WebAction.Forward), "go-next", "24")
-            _set_icon(webpage.action(QWebEnginePage.WebAction.Back), "go-previous", "24")
-            _set_icon(webpage.action(QWebEnginePage.WebAction.Reload), "reload")
-            _set_icon(webpage.action(QWebEnginePage.WebAction.CopyImageToClipboard), "edit-copy")
+            _set_icon(webpage.action(
+                QWebEnginePage.WebAction.Forward), "go-next", "24")
+            _set_icon(webpage.action(QWebEnginePage.WebAction.Back),
+                      "go-previous", "24")
+            _set_icon(webpage.action(
+                QWebEnginePage.WebAction.Reload), "reload")
+            _set_icon(webpage.action(
+                QWebEnginePage.WebAction.CopyImageToClipboard), "edit-copy")
             _set_icon(
-                webpage.action(QWebEnginePage.WebAction.InspectElement), "document-properties"
+                webpage.action(
+                    QWebEnginePage.WebAction.InspectElement), "document-properties"
             )
         else:
             ui.toolBar.setIconSize(QSize(16, 16))
@@ -1043,11 +1060,14 @@ class MainWindow(QMainWindow):
         # Nav Buttons
         ui.actionNavForward.triggered.connect(self._onNavForward)
         ui.actionNavBack.triggered.connect(self._onNavBack)
-        webpage.action(QWebEnginePage.WebAction.Forward).changed.connect(self._onNavActionChanged)
-        webpage.action(QWebEnginePage.WebAction.Back).changed.connect(self._onNavActionChanged)
+        webpage.action(QWebEnginePage.WebAction.Forward).changed.connect(
+            self._onNavActionChanged)
+        webpage.action(QWebEnginePage.WebAction.Back).changed.connect(
+            self._onNavActionChanged)
 
         # ListView
-        ui.listWidgetIndex.setAttribute(Qt.WidgetAttribute.WA_MacShowFocusRect, False)
+        ui.listWidgetIndex.setAttribute(
+            Qt.WidgetAttribute.WA_MacShowFocusRect, False)
 
         # WebView
         for web_act in (
@@ -1063,8 +1083,10 @@ class MainWindow(QMainWindow):
             webpage.action(web_act).setVisible(False)
 
         if hasattr(QWebEnginePage, "CopyImageUrlToClipboard"):
-            webpage.action(QWebEnginePage.CopyImageUrlToClipboard).setEnabled(False)
-            webpage.action(QWebEnginePage.CopyImageUrlToClipboard).setVisible(False)
+            webpage.action(
+                QWebEnginePage.CopyImageUrlToClipboard).setEnabled(False)
+            webpage.action(
+                QWebEnginePage.CopyImageUrlToClipboard).setVisible(False)
 
         ui.menuEdit.insertAction(ui.actionFind, ui.webView.actionCopyPlain)
         ui.menuEdit.insertSeparator(ui.actionFind)
@@ -1095,9 +1117,11 @@ class MainWindow(QMainWindow):
             partial(self.setFindbarVisible, visible=False)
         )
         ui.lineEditFind.shiftReturnPressed.connect(self.findPrev)
-        ui.listWidgetIndex.itemSelectionChanged.connect(self._onItemSelectionChanged)
+        ui.listWidgetIndex.itemSelectionChanged.connect(
+            self._onItemSelectionChanged)
         # FIXME(wontfix): webpage.linkClicked.connect(self._onWebViewLinkClicked)
-        ui.webView.loadStarted.connect(partial(self.setFindbarVisible, visible=False))
+        ui.webView.loadStarted.connect(
+            partial(self.setFindbarVisible, visible=False))
         ui.webView.wheelWithCtrl.connect(self._onWebViewWheelWithCtrl)
         ui.webView.urlChanged.connect(self._onUrlChanged)
         ui.webView.loadFinished.connect(self._onLoadFinished)
@@ -1124,9 +1148,11 @@ class MainWindow(QMainWindow):
         act_conn(ui.actionNormalSize, partial(self.setZoom, 0))
         act_conn(ui.actionMonitorClipboard, self._onMonitorClipboardChanged)
         act_conn(ui.actionFind, partial(self.setFindbarVisible, visible=True))
-        act_conn(ui.actionFindClose, partial(self.setFindbarVisible, visible=False))
+        act_conn(ui.actionFindClose, partial(
+            self.setFindbarVisible, visible=False))
         act_conn(
-            ui.actionCloseInspector, partial(self.setInspectorVisible, visible=False)
+            ui.actionCloseInspector, partial(
+                self.setInspectorVisible, visible=False)
         )
         act_conn(
             webpage.action(QWebEnginePage.WebAction.InspectElement),
@@ -1165,7 +1191,8 @@ class MainWindow(QMainWindow):
         ui.actionPrint.setShortcuts(QKeySequence.StandardKey.Print)
         ui.actionNormalSize.setShortcut(QKeySequence("Ctrl+0"))
         ui.actionFocusLineEdit.setShortcut(QKeySequence("Ctrl+L"))
-        webpage.action(QWebEnginePage.WebAction.SelectAll).setShortcut(QKeySequence("Ctrl+A"))
+        webpage.action(QWebEnginePage.WebAction.SelectAll).setShortcut(
+            QKeySequence("Ctrl+A"))
         webpage.action(QWebEnginePage.WebAction.Back).setShortcuts(
             [
                 k
@@ -1227,7 +1254,8 @@ class MainWindow(QMainWindow):
             pass
 
         try:
-            ui.actionMonitorClipboard.setChecked(config.get("monitorClipboard", False))
+            ui.actionMonitorClipboard.setChecked(
+                config.get("monitorClipboard", False))
         except:
             pass
 
@@ -1335,7 +1363,8 @@ class MainWindow(QMainWindow):
     def _advsearch_window(self):
         obj = self._lazy.get(_LAZY_ADVSEARCH_WINDOW, None)
         if obj is None:
-            obj = self._lazy[_LAZY_ADVSEARCH_WINDOW] = AdvancedSearchDialog(self)
+            obj = self._lazy[_LAZY_ADVSEARCH_WINDOW] = AdvancedSearchDialog(
+                self)
 
         return obj
 
